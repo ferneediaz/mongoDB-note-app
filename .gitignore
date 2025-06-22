@@ -214,34 +214,10 @@ dist
 *.swo
 *~
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
 # Build outputs
 build/
 dist/
 out/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Compressed files
-*.zip
-*.tar.gz
-*.rar
 
 # Local development files
 .local

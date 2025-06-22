@@ -1,14 +1,23 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+// In-memory store for rate limiting
+const rateLimitStore = new Map();
 
-import dotenv from "dotenv";
+// Clean up old entries every minute
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamps] of rateLimitStore.entries()) {
+    const filtered = timestamps.filter(timestamp => now - timestamp < 60000); // 60 seconds
+    if (filtered.length === 0) {
+      rateLimitStore.delete(key);
+    } else {
+      rateLimitStore.set(key, filtered);
+    }
+  }
+}, 60000);
 
-dotenv.config();
+// Rate limiter configuration
+const rateLimitConfig = {
+  windowMs: 60000, // 1 minute
+  maxRequests: 5,  // 5 requests per minute
+};
 
-// create a ratelimiter that allows 5 requests per minute
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "60 s"),
-});
-
-export default ratelimit;
+export { rateLimitStore, rateLimitConfig };
